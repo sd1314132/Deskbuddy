@@ -1,0 +1,39 @@
+﻿@model List<Deskbuddy.Models.RoomUtilizationViewModel>
+
+<h2>Room Utilization</h2>
+
+<div id="chart_div"></div>
+
+@section Scripts {
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        google.charts.load('current', { packages: ['corechart', 'bar'] });
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Room');
+            data.addColumn('number', 'Employee Count');
+            data.addRows([
+        @foreach (var item in Model)
+        {
+            ['@item.RoomId', @item.EmployeeCount],
+    }
+            ]);
+
+            var options = {
+                title: 'Average Employee Count per Room',
+                hAxis: {
+                    title: 'Room'
+                },
+                vAxis: {
+                    title: 'Employee Count'
+                }
+            };
+
+            var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+            chart.draw(data, options);
+        }
+    </script>
+}
+
